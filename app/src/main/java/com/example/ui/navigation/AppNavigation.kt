@@ -32,7 +32,8 @@ enum class AppDestination(
     ATELIERS("Ateliers", Icons.Default.EditNote, Icons.Outlined.EditNote),
     QUIZ("Quiz", Icons.Default.Quiz, Icons.Outlined.Quiz),
     LEXIQUE("Lexique", Icons.Default.FormatQuote, Icons.Outlined.FormatQuote),
-    SEARCH("Recherche", Icons.Default.Search, Icons.Outlined.Search)
+    SEARCH("Recherche", Icons.Default.Search, Icons.Outlined.Search),
+    ABOUT("À Propos", Icons.Default.Info, Icons.Outlined.Info)
 }
 
 @Composable
@@ -49,6 +50,7 @@ fun MainAppContainer(
 
     var currentDestination by remember { mutableStateOf(AppDestination.HOME) }
     var selectedLexiqueCahierId by remember { mutableStateOf(1) }
+    var aboutInitialTab by remember { mutableIntStateOf(0) }
 
     val bottomNavItems = listOf(
         AppDestination.HOME,
@@ -60,8 +62,8 @@ fun MainAppContainer(
 
     Scaffold(
         bottomBar = {
-            // Show bottom bar for primary tabs, hide when searching or in reader if preferred
-            if (currentDestination != AppDestination.SEARCH) {
+            // Show bottom bar for primary tabs, hide when searching or in about
+            if (currentDestination != AppDestination.SEARCH && currentDestination != AppDestination.ABOUT) {
                 Surface(
                     modifier = Modifier.fillMaxWidth(),
                     color = MinimalSurfaceContainer,
@@ -128,6 +130,7 @@ fun MainAppContainer(
                             readerViewModel.selectPlanche(cahierId, plancheIdx)
                             currentDestination = AppDestination.READER
                         },
+                        onToggleBookmark = { id, cId -> readerViewModel.toggleBookmark(id, cId) },
                         onNavigateToProgress = { currentDestination = AppDestination.PROGRESS },
                         onNavigateToAteliers = { currentDestination = AppDestination.ATELIERS },
                         onNavigateToQuiz = { cahierId ->
@@ -137,6 +140,10 @@ fun MainAppContainer(
                         onNavigateToLexique = { cahierId ->
                             selectedLexiqueCahierId = cahierId
                             currentDestination = AppDestination.LEXIQUE
+                        },
+                        onNavigateToAbout = { tab ->
+                            aboutInitialTab = tab
+                            currentDestination = AppDestination.ABOUT
                         },
                         onSearchClick = { currentDestination = AppDestination.SEARCH }
                     )
@@ -150,6 +157,8 @@ fun MainAppContainer(
                         onToggleRead = { id, cId -> readerViewModel.togglePlancheRead(id, cId) },
                         onToggleBookmark = { id, cId -> readerViewModel.toggleBookmark(id, cId) },
                         onSaveNote = { id, cId, note -> readerViewModel.saveNote(id, cId, note) },
+                        onChangeTextScale = { scale -> readerViewModel.setTextScale(scale) },
+                        onSelectPlanche = { cahierId, plancheIdx -> readerViewModel.selectPlanche(cahierId, plancheIdx) },
                         onBackToLibrary = { currentDestination = AppDestination.HOME },
                         onNavigateToQuiz = { cahierId ->
                             quizViewModel.selectCahier(cahierId)
@@ -169,6 +178,12 @@ fun MainAppContainer(
                         onUpdateGoal = { target, habit, time, trigger ->
                             progressViewModel.updateGoal(target, habit, time, trigger)
                         },
+                        onSetReminder = { enabled, hour, min ->
+                            progressViewModel.setReminder(enabled, hour, min)
+                        },
+                        onSendTestNotification = {
+                            progressViewModel.sendTestNotification()
+                        },
                         onSelectCahier = { cahierId ->
                             readerViewModel.selectCahier(cahierId)
                             currentDestination = AppDestination.READER
@@ -176,6 +191,10 @@ fun MainAppContainer(
                         onNavigateToQuiz = { cahierId ->
                             quizViewModel.selectCahier(cahierId)
                             currentDestination = AppDestination.QUIZ
+                        },
+                        onNavigateToAbout = { tab ->
+                            aboutInitialTab = tab
+                            currentDestination = AppDestination.ABOUT
                         },
                         onBack = { currentDestination = AppDestination.HOME }
                     )
@@ -214,10 +233,19 @@ fun MainAppContainer(
 
                 AppDestination.SEARCH -> {
                     SearchScreen(
+                        bookmarkedIds = readerState.bookmarkedIds,
+                        onToggleBookmark = { id, cId -> readerViewModel.toggleBookmark(id, cId) },
                         onSelectPlanche = { cahierId, plancheIdx ->
                             readerViewModel.selectPlanche(cahierId, plancheIdx)
                             currentDestination = AppDestination.READER
                         },
+                        onBack = { currentDestination = AppDestination.HOME }
+                    )
+                }
+
+                AppDestination.ABOUT -> {
+                    AboutScreen(
+                        initialTab = aboutInitialTab,
                         onBack = { currentDestination = AppDestination.HOME }
                     )
                 }

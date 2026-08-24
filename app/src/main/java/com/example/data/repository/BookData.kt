@@ -107,6 +107,16 @@ object BookData {
         return allPlanches.filter { it.cahierId == cahierId }
     }
 
+    fun getPlancheById(id: String): Planche? {
+        return allPlanches.find { it.id == id }
+    }
+
+    fun getPlancheIndexInCahier(planche: Planche): Int {
+        val cahierPlanches = getPlanchesForCahier(planche.cahierId)
+        val idx = cahierPlanches.indexOfFirst { it.id == planche.id }
+        return if (idx >= 0) idx else 0
+    }
+
     val allPlanches: List<Planche> = listOf(
         // ================= CAHIER 01: MON ARGENT, MES CHOIX =================
         Planche(

@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.data.local.*
 import com.example.data.repository.BookData
 import com.example.data.repository.ProgressRepository
+import com.example.ui.notification.DailyReminderManager
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
@@ -49,6 +50,7 @@ class ProgressViewModel(application: Application) : AndroidViewModel(application
     val uiState: StateFlow<ProgressUiState> = _uiState.asStateFlow()
 
     init {
+        DailyReminderManager.createNotificationChannel(application)
         val database = AppDatabase.getDatabase(application)
         repository = ProgressRepository(database.progressDao())
 
@@ -134,9 +136,63 @@ class ProgressViewModel(application: Application) : AndroidViewModel(application
         }
     }
 
-    fun updateGoal(targetPlanches: Int, habitName: String, habitTime: String, habitTrigger: String) {
+    fun updateGoal(
+        targetPlanches: Int,
+        habitName: String,
+        habitTime: String,
+        habitTrigger: String,
+        reminderEnabled: Boolean = _uiState.value.userSettings.reminderEnabled,
+        reminderHour: Int = _uiState.value.userSettings.reminderHour,
+        reminderMinute: Int = _uiState.value.userSettings.reminderMinute
+    ) {
         viewModelScope.launch {
-            repository.updateGoalSettings(targetPlanches, habitName, habitTime, habitTrigger)
+            repository.updateGoalSettings(
+                targetPlanches = targetPlanches,
+                habitName = habitName,
+                habitTime = habitTime,
+                habitTrigger = habitTrigger,
+                reminderEnabled = reminderEnabled,
+                reminderHour = reminderHour,
+                reminderMinute = reminderMinute
+            )
+            val app = getApplication<Application>()
+            if (reminderEnabled) {
+                DailyReminderManager.scheduleDailyReminder(app, reminderHour, reminderMinute)
+            } else {
+                DailyReminderManager.cancelDailyReminder(app)
+            }
         }
     }
+
+    fun setReminder(enabled: Boolean, hour: Int, minute: Int) {
+        viewModelScope.launch {
+            val current = _uiState.value.userSettings
+            val timeStr = "%02dh%02d".format(hour, minute)
+            repository.updateGoalSettings(
+                targetPlanches = current.dailyTargetPlanches,
+                habitName = current.selectedHabitName,
+                habitTime = timeStr,
+                habitTrigger = current.habitTrigger,
+                reminderEnabled = enabled,
+                reminderHour = hour,
+                reminderMinute = minute
+            )
+            val app = getApplication<Application>()
+            if (enabled) {
+                DailyReminderManager.scheduleDailyReminder(app, hour, minute)
+            } else {
+                DailyReminderManager.cancelDailyReminder(app)
+            }
+        }
+    }
+
+    fun sendTestNotification() {
+        val app = getApplication<Application>()
+        DailyReminderManager.showReadingNotification(
+            context = app,
+            title = "Sekolin'ny Fiainana • Test du rappel",
+            message = "Le rappel quotidien fonctionne parfaitement ! Ta série de discipline est prête à être maintenue."
+        )
+    }
 }
+

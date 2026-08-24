@@ -100,7 +100,10 @@ class ProgressRepository(private val progressDao: ProgressDao) {
         targetPlanches: Int,
         habitName: String,
         habitTime: String,
-        habitTrigger: String
+        habitTrigger: String,
+        reminderEnabled: Boolean,
+        reminderHour: Int,
+        reminderMinute: Int
     ) {
         progressDao.saveUserSettings(
             UserSettingsEntity(
@@ -108,7 +111,29 @@ class ProgressRepository(private val progressDao: ProgressDao) {
                 dailyTargetPlanches = targetPlanches,
                 selectedHabitName = habitName,
                 habitTime = habitTime,
-                habitTrigger = habitTrigger
+                habitTrigger = habitTrigger,
+                reminderEnabled = reminderEnabled,
+                reminderHour = reminderHour,
+                reminderMinute = reminderMinute
+            )
+        )
+    }
+
+    suspend fun updateReminderSettings(
+        enabled: Boolean,
+        hour: Int,
+        minute: Int
+    ) {
+        val current = progressDao.getUserSettings().map { it ?: UserSettingsEntity() }
+        // Fetch or create
+        progressDao.saveUserSettings(
+            UserSettingsEntity(
+                id = 1,
+                dailyTargetPlanches = 1,
+                habitTime = "%02dh%02d".format(hour, minute),
+                reminderEnabled = enabled,
+                reminderHour = hour,
+                reminderMinute = minute
             )
         )
     }

@@ -46,13 +46,19 @@ fun HomeScreen(
     readerState: ReaderUiState,
     onSelectCahier: (Int) -> Unit,
     onOpenPlanche: (Int, Int) -> Unit,
+    onToggleBookmark: (String, Int) -> Unit = { _, _ -> },
     onNavigateToProgress: () -> Unit,
     onNavigateToAteliers: () -> Unit,
     onNavigateToQuiz: (Int) -> Unit,
     onNavigateToLexique: (Int) -> Unit,
+    onNavigateToAbout: (Int) -> Unit = {},
     onSearchClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val bookmarkedPlanches = remember(readerState.bookmarkedIds) {
+        readerState.bookmarkedIds.mapNotNull { BookData.getPlancheById(it) }
+    }
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -95,6 +101,16 @@ fun HomeScreen(
                         Icon(
                             imageVector = Icons.Default.Search,
                             contentDescription = "Rechercher une notion",
+                            tint = MinimalTextPrimary
+                        )
+                    }
+                    IconButton(
+                        onClick = { onNavigateToAbout(0) },
+                        modifier = Modifier.testTag("home_about_button")
+                    ) {
+                        Icon(
+                            imageVector = Icons.Outlined.Info,
+                            contentDescription = "À Propos & Mentions",
                             tint = MinimalTextPrimary
                         )
                     }
@@ -321,6 +337,225 @@ fun HomeScreen(
                 }
             }
 
+            // Section: Mes Signets & Favoris (Planches Épinglées)
+            item {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 2.dp, end = 2.dp, top = 4.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Icon(
+                            imageVector = Icons.Default.Bookmark,
+                            contentDescription = null,
+                            tint = Grenat,
+                            modifier = Modifier.size(18.dp)
+                        )
+                        Spacer(modifier = Modifier.width(6.dp))
+                        Text(
+                            text = "MES SIGNETS & FAVORIS",
+                            style = MaterialTheme.typography.labelSmall.copy(
+                                fontWeight = FontWeight.Bold,
+                                letterSpacing = 1.sp,
+                                color = GrenatProfond
+                            )
+                        )
+                    }
+
+                    if (bookmarkedPlanches.isNotEmpty()) {
+                        BadgePill(
+                            text = "${bookmarkedPlanches.size} épinglée${if (bookmarkedPlanches.size > 1) "s" else ""}",
+                            backgroundColor = Moutarde.copy(alpha = 0.2f),
+                            textColor = GrenatProfond
+                        )
+                    }
+                }
+            }
+
+            if (bookmarkedPlanches.isNotEmpty()) {
+                items(bookmarkedPlanches) { planche ->
+                    val cahier = BookData.cahiers.find { it.id == planche.cahierId } ?: BookData.cahiers.first()
+                    val plancheIndex = BookData.getPlancheIndexInCahier(planche)
+
+                    Card(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                onSelectCahier(planche.cahierId)
+                                onOpenPlanche(planche.cahierId, plancheIndex)
+                            }
+                            .testTag("pinned_planche_${planche.id}"),
+                        shape = RoundedCornerShape(14.dp),
+                        colors = CardDefaults.cardColors(containerColor = MinimalSurface),
+                        border = BorderStroke(1.dp, Moutarde.copy(alpha = 0.5f))
+                    ) {
+                        Column(modifier = Modifier.padding(14.dp)) {
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    modifier = Modifier.weight(1f)
+                                ) {
+                                    Box(
+                                        modifier = Modifier
+                                            .size(28.dp)
+                                            .clip(CircleShape)
+                                            .background(Grenat),
+                                        contentAlignment = Alignment.Center
+                                    ) {
+                                        Text(
+                                            text = cahier.number,
+                                            style = MaterialTheme.typography.labelSmall.copy(
+                                                color = Blanc,
+                                                fontWeight = FontWeight.Bold,
+                                                fontSize = 11.sp
+                                            )
+                                        )
+                                    }
+                                    Spacer(modifier = Modifier.width(8.dp))
+                                    Text(
+                                        text = "Cahier ${cahier.number} · ${cahier.title}",
+                                        style = MaterialTheme.typography.labelSmall.copy(
+                                            color = MinimalTextSecondary,
+                                            fontWeight = FontWeight.SemiBold
+                                        ),
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis
+                                    )
+                                }
+
+                                IconButton(
+                                    onClick = { onToggleBookmark(planche.id, planche.cahierId) },
+                                    modifier = Modifier.size(28.dp)
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Default.Bookmark,
+                                        contentDescription = "Retirer des favoris",
+                                        tint = Grenat,
+                                        modifier = Modifier.size(20.dp)
+                                    )
+                                }
+                            }
+
+                            Spacer(modifier = Modifier.height(6.dp))
+
+                            Text(
+                                text = planche.title,
+                                style = MaterialTheme.typography.titleMedium.copy(
+                                    fontWeight = FontWeight.Bold,
+                                    color = MinimalTextPrimary
+                                )
+                            )
+
+                            Spacer(modifier = Modifier.height(4.dp))
+
+                            Text(
+                                text = planche.accroche,
+                                style = MaterialTheme.typography.bodySmall.copy(
+                                    color = MinimalTextSecondary,
+                                    lineHeight = 17.sp
+                                ),
+                                maxLines = 2,
+                                overflow = TextOverflow.Ellipsis
+                            )
+
+                            Spacer(modifier = Modifier.height(10.dp))
+
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                BadgePill(
+                                    text = planche.sectionNumber,
+                                    backgroundColor = MinimalSecondaryContainer,
+                                    textColor = MinimalOnPrimaryContainer
+                                )
+
+                                Button(
+                                    onClick = {
+                                        onSelectCahier(planche.cahierId)
+                                        onOpenPlanche(planche.cahierId, plancheIndex)
+                                    },
+                                    colors = ButtonDefaults.buttonColors(
+                                        containerColor = Grenat,
+                                        contentColor = Blanc
+                                    ),
+                                    contentPadding = PaddingValues(horizontal = 12.dp, vertical = 4.dp),
+                                    shape = RoundedCornerShape(8.dp)
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Default.AutoStories,
+                                        contentDescription = null,
+                                        tint = Blanc,
+                                        modifier = Modifier.size(14.dp)
+                                    )
+                                    Spacer(modifier = Modifier.width(6.dp))
+                                    Text(
+                                        text = "Lire en 1 clic",
+                                        style = MaterialTheme.typography.labelSmall.copy(
+                                            color = Blanc,
+                                            fontWeight = FontWeight.Bold
+                                        )
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
+            } else {
+                item {
+                    Card(
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(12.dp),
+                        colors = CardDefaults.cardColors(containerColor = MinimalSurfaceContainer.copy(alpha = 0.5f)),
+                        border = BorderStroke(1.dp, MinimalOutline.copy(alpha = 0.5f))
+                    ) {
+                        Row(
+                            modifier = Modifier.padding(14.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Box(
+                                modifier = Modifier
+                                    .size(36.dp)
+                                    .clip(CircleShape)
+                                    .background(MinimalSecondaryContainer),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Outlined.BookmarkBorder,
+                                    contentDescription = null,
+                                    tint = MinimalTextSecondary,
+                                    modifier = Modifier.size(20.dp)
+                                )
+                            }
+                            Spacer(modifier = Modifier.width(12.dp))
+                            Column {
+                                Text(
+                                    text = "Aucune planche épinglée pour le moment",
+                                    style = MaterialTheme.typography.bodyMedium.copy(
+                                        fontWeight = FontWeight.Bold,
+                                        color = MinimalTextPrimary
+                                    )
+                                )
+                                Text(
+                                    text = "En lisant une planche, touchez l'icône de signet 🔖 pour l'épingler et y revenir en un clic.",
+                                    style = MaterialTheme.typography.bodySmall.copy(
+                                        color = MinimalTextSecondary,
+                                        lineHeight = 16.sp
+                                    )
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+
             // Section Header: Les 8 Cahiers
             item {
                 Row(
@@ -421,6 +656,107 @@ fun HomeScreen(
                                 fontWeight = FontWeight.Bold
                             )
                         )
+                    }
+                }
+            }
+
+            // Section: À Propos, Mentions & Confidentialité Google Play
+            item {
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .testTag("home_about_footer_card"),
+                    shape = RoundedCornerShape(16.dp),
+                    colors = CardDefaults.cardColors(containerColor = MinimalSurface),
+                    border = BorderStroke(1.dp, MinimalOutline)
+                ) {
+                    Column(modifier = Modifier.padding(16.dp)) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Icon(
+                                    imageVector = Icons.Default.Info,
+                                    contentDescription = null,
+                                    tint = Grenat,
+                                    modifier = Modifier.size(20.dp)
+                                )
+                                Spacer(modifier = Modifier.width(8.dp))
+                                Text(
+                                    text = "À Propos & L'Œuvre",
+                                    style = MaterialTheme.typography.titleSmall.copy(
+                                        fontWeight = FontWeight.Bold,
+                                        color = MinimalTextPrimary
+                                    )
+                                )
+                            }
+                            BadgePill(
+                                text = "Édition 2026",
+                                backgroundColor = CremeFonce,
+                                textColor = GrenatProfond
+                            )
+                        }
+
+                        Spacer(modifier = Modifier.height(8.dp))
+
+                        Text(
+                            text = "Sekolin'ny Fiainana est un recueil de 160 planches pratiques réparties en 8 cahiers pour développer autonomie financière, clarté mentale et résilience.",
+                            style = MaterialTheme.typography.bodySmall.copy(
+                                color = MinimalTextSecondary,
+                                lineHeight = 18.sp
+                            )
+                        )
+
+                        Spacer(modifier = Modifier.height(14.dp))
+
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(10.dp)
+                        ) {
+                            OutlinedButton(
+                                onClick = { onNavigateToAbout(0) },
+                                modifier = Modifier.weight(1f),
+                                shape = RoundedCornerShape(10.dp),
+                                contentPadding = PaddingValues(horizontal = 8.dp, vertical = 6.dp)
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.MenuBook,
+                                    contentDescription = null,
+                                    tint = Grenat,
+                                    modifier = Modifier.size(16.dp)
+                                )
+                                Spacer(modifier = Modifier.width(6.dp))
+                                Text(
+                                    text = "Auteur & Vision",
+                                    style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold)
+                                )
+                            }
+
+                            Button(
+                                onClick = { onNavigateToAbout(1) },
+                                modifier = Modifier.weight(1f),
+                                shape = RoundedCornerShape(10.dp),
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = GrenatProfond,
+                                    contentColor = Blanc
+                                ),
+                                contentPadding = PaddingValues(horizontal = 8.dp, vertical = 6.dp)
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.PrivacyTip,
+                                    contentDescription = null,
+                                    tint = Blanc,
+                                    modifier = Modifier.size(16.dp)
+                                )
+                                Spacer(modifier = Modifier.width(6.dp))
+                                Text(
+                                    text = "Confidentialité",
+                                    style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold)
+                                )
+                            }
+                        }
                     }
                 }
             }

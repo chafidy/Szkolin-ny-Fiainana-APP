@@ -13,7 +13,7 @@ import androidx.room.RoomDatabase
         AtelierEntryEntity::class,
         UserSettingsEntity::class
     ],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {

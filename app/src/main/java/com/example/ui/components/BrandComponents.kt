@@ -123,7 +123,8 @@ fun BadgePill(
 @Composable
 fun BandeauBordeaux(
     advice: BottomAdvice,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    textScale: Float = 1.0f
 ) {
     // Charter Page 12: Encadré Conseil: fond crème foncé ou olive clair, titre olive/grenat, action en moutarde
     val (bgColor, iconColor, borderColor) = when (advice.type) {
@@ -172,6 +173,7 @@ fun BandeauBordeaux(
                 Text(
                     text = advice.title.uppercase(),
                     style = MaterialTheme.typography.labelMedium.copy(
+                        fontSize = (12 * textScale).sp,
                         color = if (advice.type == AdviceType.SIGNAL_ALERTE) RougeAlerte else GrenatProfond,
                         fontWeight = FontWeight.ExtraBold,
                         letterSpacing = 0.5.sp
@@ -184,8 +186,9 @@ fun BandeauBordeaux(
             Text(
                 text = advice.content,
                 style = MaterialTheme.typography.bodyMedium.copy(
+                    fontSize = (14 * textScale).sp,
                     color = Encre,
-                    lineHeight = 20.sp
+                    lineHeight = (20 * textScale).sp
                 )
             )
         }
@@ -195,7 +198,8 @@ fun BandeauBordeaux(
 @Composable
 fun KeyCardItem(
     card: KeyCard,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    textScale: Float = 1.0f
 ) {
     Card(
         modifier = modifier
@@ -231,6 +235,7 @@ fun KeyCardItem(
                 Text(
                     text = card.title,
                     style = MaterialTheme.typography.titleSmall.copy(
+                        fontSize = (15 * textScale).sp,
                         fontWeight = FontWeight.Bold,
                         color = GrenatProfond
                     )
@@ -239,8 +244,9 @@ fun KeyCardItem(
                 Text(
                     text = card.description,
                     style = MaterialTheme.typography.bodyMedium.copy(
+                        fontSize = (14 * textScale).sp,
                         color = Encre,
-                        lineHeight = 19.sp
+                        lineHeight = (19 * textScale).sp
                     )
                 )
             }
@@ -251,7 +257,8 @@ fun KeyCardItem(
 @Composable
 fun DetailedBoxCard(
     box: DetailedBox,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    textScale: Float = 1.0f
 ) {
     Card(
         modifier = modifier
@@ -267,6 +274,7 @@ fun DetailedBoxCard(
             Text(
                 text = box.title,
                 style = MaterialTheme.typography.titleSmall.copy(
+                    fontSize = (15 * textScale).sp,
                     fontWeight = FontWeight.Bold,
                     color = GrenatProfond,
                     letterSpacing = 0.25.sp
@@ -314,8 +322,9 @@ fun DetailedBoxCard(
                     Text(
                         text = item,
                         style = MaterialTheme.typography.bodyMedium.copy(
+                            fontSize = (14 * textScale).sp,
                             color = Encre,
-                            lineHeight = 20.sp
+                            lineHeight = (20 * textScale).sp
                         )
                     )
                 }
