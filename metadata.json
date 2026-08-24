@@ -1,0 +1,6 @@
+{
+  "name": "Sekolin'ny Fiainana",
+  "description": "Application de lecture pour la collection 'Ce que l'école ne t'apprend pas' avec suivi de progression personnalisée, ateliers interactifs et quiz.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
