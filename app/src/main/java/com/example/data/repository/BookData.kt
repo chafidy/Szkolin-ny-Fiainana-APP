@@ -281,8 +281,8 @@ object BookData {
                 DetailedBox(
                     title = "MAUVAISE vs BONNE HABITUDE",
                     items = listOf(
-                        "❌ Mauvaise : Je reçois 20 000 Ar → Je dépense → J'épargne ce qui reste → Souvent 0 Ar.",
-                        "✅ Bonne : Je reçois 20 000 Ar → Je mets 4 000 Ar de côté → Je vis avec 16 000 Ar → Épargne garantie !"
+                        "Mauvaise : Je reçois 20 000 Ar → Je dépense → J'épargne ce qui reste → Souvent 0 Ar.",
+                        "Bonne : Je reçois 20 000 Ar → Je mets 4 000 Ar de côté → Je vis avec 16 000 Ar → Épargne garantie !"
                     )
                 )
             ),
@@ -386,8 +386,8 @@ object BookData {
                 DetailedBox(
                     title = "CRÉDIT UTILE vs CRÉDIT PIÈGE",
                     items = listOf(
-                        "✅ Utile : Finance quelque chose qui garde ou crée de la valeur (études, outil).",
-                        "❌ Piège : Finance une envie qui perd vite sa valeur (téléphone, vêtements), ou emprunter pour rembourser un autre emprunt."
+                        "Utile : Finance quelque chose qui garde ou crée de la valeur (études, outil).",
+                        "Piège : Finance une envie qui perd vite sa valeur (téléphone, vêtements), ou emprunter pour rembourser un autre emprunt."
                     )
                 )
             ),
@@ -707,11 +707,11 @@ object BookData {
                 DetailedBox(
                     title = "CE QUI CONSTRUIT vs CE QUI ABÎME",
                     items = listOf(
-                        "✅ Construit : Tenir une petite promesse faite à soi-même chaque jour.",
-                        "✅ Construit : Noter le soir une chose réussie, même minuscule.",
-                        "✅ Construit : Se comparer à soi d'hier, pas aux autres.",
-                        "❌ Abîme : Se parler comme on ne parlerait jamais à un ami.",
-                        "❌ Abîme : Attendre d'être 'prêt' pour commencer."
+                        "Construit : Tenir une petite promesse faite à soi-même chaque jour.",
+                        "Construit : Noter le soir une chose réussie, même minuscule.",
+                        "Construit : Se comparer à soi d'hier, pas aux autres.",
+                        "Abîme : Se parler comme on ne parlerait jamais à un ami.",
+                        "Abîme : Attendre d'être 'prêt' pour commencer."
                     )
                 )
             ),
@@ -795,8 +795,8 @@ object BookData {
                 DetailedBox(
                     title = "UN AMI QUI FAIT DU BIEN vs UNE RELATION QUI USE",
                     items = listOf(
-                        "✅ Ami bienfaisant : Tu te sens plus léger après l'avoir vu. Il se réjouit de tes réussites sans jalousie. Il respecte tes « non ».",
-                        "❌ Relation usante : Tu marches sur des œufs, peur de décevoir. Il se moque de toi « pour rire ». Il n'est là que par besoin."
+                        "Ami bienfaisant : Tu te sens plus léger après l'avoir vu. Il se réjouit de tes réussites sans jalousie. Il respecte tes « non ».",
+                        "Relation usante : Tu marches sur des œufs, peur de décevoir. Il se moque de toi « pour rire ». Il n'est là que par besoin."
                     )
                 )
             ),
@@ -1044,8 +1044,8 @@ object BookData {
                 DetailedBox(
                     title = "PAR MORCEAUX vs PAR VERSIONS",
                     items = listOf(
-                        "❌ Par morceaux : Une roue, puis un châssis, puis un moteur → Le client ne roule qu'à la toute fin.",
-                        "✅ Par versions : Une planche à roulettes, puis un vélo, puis une moto → À chaque étape le client se déplace déjà !"
+                        "Par morceaux : Une roue, puis un châssis, puis un moteur → Le client ne roule qu'à la toute fin.",
+                        "Par versions : Une planche à roulettes, puis un vélo, puis une moto → À chaque étape le client se déplace déjà !"
                     )
                 ),
                 DetailedBox(

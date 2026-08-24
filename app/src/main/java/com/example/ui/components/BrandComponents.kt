@@ -276,18 +276,41 @@ fun DetailedBoxCard(
             Spacer(modifier = Modifier.height(8.dp))
 
             box.items.forEach { item ->
+                val isPositive = item.startsWith("Bonne") || item.startsWith("Utile") || item.startsWith("Construit") || item.startsWith("Ami bienfaisant") || item.startsWith("Par versions") || item.startsWith("On garde")
+                val isNegative = item.startsWith("Mauvaise") || item.startsWith("Piège") || item.startsWith("Abîme") || item.startsWith("Relation usante") || item.startsWith("Par morceaux") || item.startsWith("On coupe")
+
                 Row(
                     modifier = Modifier.padding(vertical = 3.dp),
                     verticalAlignment = Alignment.Top
                 ) {
-                    Box(
-                        modifier = Modifier
-                            .padding(top = 6.dp)
-                            .size(6.dp)
-                            .clip(CircleShape)
-                            .background(Moutarde)
-                    )
-                    Spacer(modifier = Modifier.width(10.dp))
+                    if (isPositive) {
+                        Icon(
+                            imageVector = Icons.Default.CheckCircle,
+                            contentDescription = null,
+                            tint = VertSucces,
+                            modifier = Modifier
+                                .padding(top = 2.dp)
+                                .size(16.dp)
+                        )
+                    } else if (isNegative) {
+                        Icon(
+                            imageVector = Icons.Default.Cancel,
+                            contentDescription = null,
+                            tint = RougeAlerte,
+                            modifier = Modifier
+                                .padding(top = 2.dp)
+                                .size(16.dp)
+                        )
+                    } else {
+                        Box(
+                            modifier = Modifier
+                                .padding(top = 6.dp)
+                                .size(6.dp)
+                                .clip(CircleShape)
+                                .background(Moutarde)
+                        )
+                    }
+                    Spacer(modifier = Modifier.width(8.dp))
                     Text(
                         text = item,
                         style = MaterialTheme.typography.bodyMedium.copy(

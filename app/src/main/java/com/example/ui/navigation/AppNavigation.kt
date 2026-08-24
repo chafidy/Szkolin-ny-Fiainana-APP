@@ -26,9 +26,9 @@ enum class AppDestination(
     val selectedIcon: ImageVector,
     val unselectedIcon: ImageVector
 ) {
-    HOME("Bibliothèque", Icons.Default.MenuBook, Icons.Outlined.MenuBook),
+    HOME("Accueil", Icons.Default.MenuBook, Icons.Outlined.MenuBook),
     READER("Lecture", Icons.Default.AutoStories, Icons.Outlined.AutoStories),
-    PROGRESS("Mon Suivi", Icons.Default.Leaderboard, Icons.Outlined.Leaderboard),
+    PROGRESS("Suivi", Icons.Default.Leaderboard, Icons.Outlined.Leaderboard),
     ATELIERS("Ateliers", Icons.Default.EditNote, Icons.Outlined.EditNote),
     QUIZ("Quiz", Icons.Default.Quiz, Icons.Outlined.Quiz),
     LEXIQUE("Lexique", Icons.Default.FormatQuote, Icons.Outlined.FormatQuote),
@@ -89,7 +89,10 @@ fun MainAppContainer(
                                         style = MaterialTheme.typography.labelSmall.copy(
                                             fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
                                             fontSize = 11.sp
-                                        )
+                                        ),
+                                        maxLines = 1,
+                                        softWrap = false,
+                                        overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
                                     )
                                 },
                                 colors = NavigationBarItemDefaults.colors(

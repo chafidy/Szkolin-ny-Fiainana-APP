@@ -135,6 +135,7 @@ fun AteliersScreen(
                             contentColor = Blanc
                         ),
                         shape = RoundedCornerShape(12.dp),
+                        contentPadding = PaddingValues(horizontal = 14.dp, vertical = 8.dp),
                         modifier = Modifier.testTag("save_atelier_btn")
                     ) {
                         Icon(
@@ -143,10 +144,12 @@ fun AteliersScreen(
                             modifier = Modifier.size(18.dp),
                             tint = Blanc
                         )
-                        Spacer(modifier = Modifier.width(8.dp))
+                        Spacer(modifier = Modifier.width(6.dp))
                         Text(
-                            text = "Sauvegarder ma fiche",
-                            style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.Bold, color = Blanc)
+                            text = "Enregistrer",
+                            style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.Bold, color = Blanc),
+                            maxLines = 1,
+                            softWrap = false
                         )
                     }
                 }
@@ -242,13 +245,30 @@ fun AteliersScreen(
 
                         Spacer(modifier = Modifier.height(12.dp))
 
-                        Text(
-                            text = "💡 ${currentWorkshop.quote}",
-                            style = MaterialTheme.typography.bodySmall.copy(
-                                color = MinimalTextSecondary,
-                                fontStyle = androidx.compose.ui.text.font.FontStyle.Italic
+                        Row(
+                            verticalAlignment = Alignment.Top,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clip(RoundedCornerShape(8.dp))
+                                .background(MinimalSecondaryContainer.copy(alpha = 0.5f))
+                                .padding(10.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Lightbulb,
+                                contentDescription = null,
+                                tint = Moutarde,
+                                modifier = Modifier.size(16.dp)
                             )
-                        )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text(
+                                text = currentWorkshop.quote,
+                                style = MaterialTheme.typography.bodySmall.copy(
+                                    color = MinimalTextSecondary,
+                                    fontStyle = androidx.compose.ui.text.font.FontStyle.Italic,
+                                    lineHeight = 18.sp
+                                )
+                            )
+                        }
                     }
                 }
             }

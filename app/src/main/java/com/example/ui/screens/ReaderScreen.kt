@@ -157,6 +157,7 @@ fun ReaderScreen(
                             containerColor = if (isRead) VertDoux else Grenat,
                             contentColor = if (isRead) VertSucces else Blanc
                         ),
+                        contentPadding = PaddingValues(horizontal = 12.dp, vertical = 6.dp),
                         shape = RoundedCornerShape(12.dp),
                         modifier = Modifier.testTag("reader_toggle_read_button")
                     ) {
@@ -168,11 +169,13 @@ fun ReaderScreen(
                         )
                         Spacer(modifier = Modifier.width(6.dp))
                         Text(
-                            text = if (isRead) "Planche Lue" else "Marquer comme lu",
+                            text = if (isRead) "Lue" else "Marquer lu",
                             style = MaterialTheme.typography.labelMedium.copy(
                                 fontWeight = FontWeight.Bold,
                                 color = if (isRead) VertSucces else Blanc
-                            )
+                            ),
+                            maxLines = 1,
+                            softWrap = false
                         )
                     }
 
@@ -323,13 +326,18 @@ fun ReaderScreen(
                         modifier = Modifier
                             .weight(1f)
                             .testTag("reader_goto_lexique"),
-                        shape = RoundedCornerShape(20.dp),
+                        shape = RoundedCornerShape(12.dp),
                         colors = ButtonDefaults.outlinedButtonColors(contentColor = MinimalTextPrimary),
-                        border = BorderStroke(1.dp, MinimalOutline)
+                        border = BorderStroke(1.dp, MinimalOutline),
+                        contentPadding = PaddingValues(horizontal = 10.dp, vertical = 8.dp)
                     ) {
                         Icon(imageVector = Icons.Default.MenuBook, contentDescription = null, modifier = Modifier.size(16.dp), tint = MinimalPrimary)
                         Spacer(modifier = Modifier.width(6.dp))
-                        Text("Lexique")
+                        Text(
+                            text = "Lexique",
+                            maxLines = 1,
+                            softWrap = false
+                        )
                     }
 
                     Button(
@@ -341,11 +349,18 @@ fun ReaderScreen(
                         colors = ButtonDefaults.buttonColors(
                             containerColor = Grenat,
                             contentColor = Blanc
-                        )
+                        ),
+                        contentPadding = PaddingValues(horizontal = 10.dp, vertical = 8.dp)
                     ) {
                         Icon(imageVector = Icons.Default.Quiz, contentDescription = null, modifier = Modifier.size(16.dp), tint = Blanc)
                         Spacer(modifier = Modifier.width(6.dp))
-                        Text("Tester mes acquis", color = Blanc, fontWeight = FontWeight.Bold)
+                        Text(
+                            text = "Quiz Cahier",
+                            color = Blanc,
+                            fontWeight = FontWeight.Bold,
+                            maxLines = 1,
+                            softWrap = false
+                        )
                     }
                 }
             }

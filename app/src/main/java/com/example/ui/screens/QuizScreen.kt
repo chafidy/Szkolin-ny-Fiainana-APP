@@ -184,9 +184,32 @@ fun QuizScreen(
 
                             Spacer(modifier = Modifier.height(8.dp))
 
+                            if (quizState.isPassed) {
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.Center
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Default.Stars,
+                                        contentDescription = null,
+                                        tint = Moutarde,
+                                        modifier = Modifier.size(22.dp)
+                                    )
+                                    Spacer(modifier = Modifier.width(6.dp))
+                                    Text(
+                                        text = "Félicitations !",
+                                        style = MaterialTheme.typography.titleMedium.copy(
+                                            fontWeight = FontWeight.Bold,
+                                            color = VertSucces
+                                        )
+                                    )
+                                }
+                                Spacer(modifier = Modifier.height(4.dp))
+                            }
+
                             Text(
                                 text = if (quizState.isPassed)
-                                    "🎉 Félicitations ! Score de 8 ou plus : tu as bien assimilé les notions de ce cahier !"
+                                    "Score de 8 ou plus : tu as bien assimilé les notions de ce cahier !"
                                 else
                                     "Continue ton apprentissage ! Relis les planches et réessaie pour viser au moins 8 / 10.",
                                 style = MaterialTheme.typography.bodyMedium.copy(
@@ -268,20 +291,43 @@ fun QuizScreen(
 
                             Spacer(modifier = Modifier.height(10.dp))
 
-                            Text(
-                                text = "• Option A : ${q.optionA} ${if (q.correctOption == "A") "✓ (Bonne réponse)" else ""}",
-                                style = MaterialTheme.typography.bodySmall.copy(
-                                    color = if (q.correctOption == "A") VertSucces else MinimalTextSecondary,
-                                    fontWeight = if (q.correctOption == "A") FontWeight.Bold else FontWeight.Normal
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                if (q.correctOption == "A") {
+                                    Icon(
+                                        imageVector = Icons.Default.CheckCircle,
+                                        contentDescription = "Bonne réponse",
+                                        tint = VertSucces,
+                                        modifier = Modifier.size(16.dp)
+                                    )
+                                    Spacer(modifier = Modifier.width(6.dp))
+                                }
+                                Text(
+                                    text = "Option A : ${q.optionA}${if (q.correctOption == "A") " (Bonne réponse)" else ""}",
+                                    style = MaterialTheme.typography.bodySmall.copy(
+                                        color = if (q.correctOption == "A") VertSucces else MinimalTextSecondary,
+                                        fontWeight = if (q.correctOption == "A") FontWeight.Bold else FontWeight.Normal
+                                    )
                                 )
-                            )
-                            Text(
-                                text = "• Option B : ${q.optionB} ${if (q.correctOption == "B") "✓ (Bonne réponse)" else ""}",
-                                style = MaterialTheme.typography.bodySmall.copy(
-                                    color = if (q.correctOption == "B") VertSucces else MinimalTextSecondary,
-                                    fontWeight = if (q.correctOption == "B") FontWeight.Bold else FontWeight.Normal
+                            }
+                            Spacer(modifier = Modifier.height(4.dp))
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                if (q.correctOption == "B") {
+                                    Icon(
+                                        imageVector = Icons.Default.CheckCircle,
+                                        contentDescription = "Bonne réponse",
+                                        tint = VertSucces,
+                                        modifier = Modifier.size(16.dp)
+                                    )
+                                    Spacer(modifier = Modifier.width(6.dp))
+                                }
+                                Text(
+                                    text = "Option B : ${q.optionB}${if (q.correctOption == "B") " (Bonne réponse)" else ""}",
+                                    style = MaterialTheme.typography.bodySmall.copy(
+                                        color = if (q.correctOption == "B") VertSucces else MinimalTextSecondary,
+                                        fontWeight = if (q.correctOption == "B") FontWeight.Bold else FontWeight.Normal
+                                    )
                                 )
-                            )
+                            }
 
                             Spacer(modifier = Modifier.height(10.dp))
 
@@ -387,11 +433,12 @@ fun QuizScreen(
                                 OutlinedButton(
                                     onClick = onPreviousQuestion,
                                     enabled = activeIdx > 0,
-                                    shape = RoundedCornerShape(20.dp),
+                                    shape = RoundedCornerShape(12.dp),
                                     colors = ButtonDefaults.outlinedButtonColors(contentColor = MinimalTextPrimary),
-                                    border = BorderStroke(1.dp, MinimalOutline)
+                                    border = BorderStroke(1.dp, MinimalOutline),
+                                    contentPadding = PaddingValues(horizontal = 12.dp, vertical = 8.dp)
                                 ) {
-                                    Text("Précédente")
+                                    Text("Précédente", maxLines = 1, softWrap = false)
                                 }
 
                                 if (activeIdx < questions.size - 1) {
@@ -401,9 +448,10 @@ fun QuizScreen(
                                         colors = ButtonDefaults.buttonColors(
                                             containerColor = Grenat,
                                             contentColor = Blanc
-                                        )
+                                        ),
+                                        contentPadding = PaddingValues(horizontal = 14.dp, vertical = 8.dp)
                                     ) {
-                                        Text("Suivante", color = Blanc, fontWeight = FontWeight.Bold)
+                                        Text("Suivante", color = Blanc, fontWeight = FontWeight.Bold, maxLines = 1, softWrap = false)
                                     }
                                 } else {
                                     Button(
@@ -413,11 +461,12 @@ fun QuizScreen(
                                             containerColor = Grenat,
                                             contentColor = Blanc
                                         ),
+                                        contentPadding = PaddingValues(horizontal = 14.dp, vertical = 8.dp),
                                         modifier = Modifier.testTag("quiz_submit_button")
                                     ) {
                                         Icon(imageVector = Icons.Default.Check, contentDescription = null, modifier = Modifier.size(16.dp), tint = Blanc)
                                         Spacer(modifier = Modifier.width(6.dp))
-                                        Text("Valider le quiz", color = Blanc, fontWeight = FontWeight.Bold)
+                                        Text("Valider", color = Blanc, fontWeight = FontWeight.Bold, maxLines = 1, softWrap = false)
                                     }
                                 }
                             }

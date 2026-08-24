@@ -194,15 +194,17 @@ fun HomeScreen(
                                     imageVector = Icons.Default.LocalFireDepartment,
                                     contentDescription = null,
                                     tint = Moutarde,
-                                    modifier = Modifier.size(18.dp)
+                                    modifier = Modifier.size(16.dp)
                                 )
                                 Spacer(modifier = Modifier.width(4.dp))
                                 Text(
-                                    text = "${progressState.currentStreak} jour(s)",
+                                    text = "${progressState.currentStreak} j",
                                     style = MaterialTheme.typography.labelMedium.copy(
                                         color = Creme,
                                         fontWeight = FontWeight.Bold
-                                    )
+                                    ),
+                                    maxLines = 1,
+                                    softWrap = false
                                 )
                             }
 
@@ -211,15 +213,17 @@ fun HomeScreen(
                                     imageVector = Icons.Default.CheckCircle,
                                     contentDescription = null,
                                     tint = Moutarde,
-                                    modifier = Modifier.size(18.dp)
+                                    modifier = Modifier.size(16.dp)
                                 )
                                 Spacer(modifier = Modifier.width(4.dp))
                                 Text(
-                                    text = "${progressState.totalPlanchesRead} / 160 planches",
+                                    text = "${progressState.totalPlanchesRead}/160 lues",
                                     style = MaterialTheme.typography.labelMedium.copy(
                                         color = Creme,
                                         fontWeight = FontWeight.Bold
-                                    )
+                                    ),
+                                    maxLines = 1,
+                                    softWrap = false
                                 )
                             }
 
@@ -229,13 +233,15 @@ fun HomeScreen(
                                     containerColor = Moutarde,
                                     contentColor = Encre
                                 ),
-                                contentPadding = PaddingValues(horizontal = 14.dp, vertical = 6.dp),
-                                shape = RoundedCornerShape(10.dp),
+                                contentPadding = PaddingValues(horizontal = 10.dp, vertical = 4.dp),
+                                shape = RoundedCornerShape(8.dp),
                                 modifier = Modifier.testTag("home_view_progress_btn")
                             ) {
                                 Text(
-                                    text = "Mon Suivi",
-                                    style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold)
+                                    text = "Suivi",
+                                    style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
+                                    maxLines = 1,
+                                    softWrap = false
                                 )
                             }
                         }
@@ -526,10 +532,12 @@ fun CahierCard(
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
                         text = "$readPlanches / $totalPlanches lues",
-                        style = MaterialTheme.typography.labelSmall.copy(color = EncreMoyenne)
+                        style = MaterialTheme.typography.labelSmall.copy(color = EncreMoyenne),
+                        maxLines = 1,
+                        softWrap = false
                     )
                     if (isQuizPassed) {
-                        Spacer(modifier = Modifier.width(6.dp))
+                        Spacer(modifier = Modifier.width(4.dp))
                         Icon(
                             imageVector = Icons.Default.Verified,
                             contentDescription = "Quiz validé",
@@ -547,7 +555,7 @@ fun CahierCard(
                         modifier = Modifier.clickable { onLexique() }
                     ) {
                         Row(
-                            modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp),
+                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 5.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Icon(
@@ -562,7 +570,9 @@ fun CahierCard(
                                 style = MaterialTheme.typography.labelSmall.copy(
                                     fontWeight = FontWeight.Bold,
                                     color = GrenatProfond
-                                )
+                                ),
+                                maxLines = 1,
+                                softWrap = false
                             )
                         }
                     }
@@ -574,7 +584,7 @@ fun CahierCard(
                         modifier = Modifier.clickable { onQuiz() }
                     ) {
                         Row(
-                            modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp),
+                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 5.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Icon(
@@ -589,7 +599,9 @@ fun CahierCard(
                                 style = MaterialTheme.typography.labelSmall.copy(
                                     fontWeight = FontWeight.Bold,
                                     color = if (isQuizPassed) VertSucces else GrenatProfond
-                                )
+                                ),
+                                maxLines = 1,
+                                softWrap = false
                             )
                         }
                     }

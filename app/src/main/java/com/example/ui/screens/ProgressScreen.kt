@@ -154,9 +154,9 @@ fun ProgressScreen(
 
                         BrandProgressBar(
                             progress = progressState.totalPlanchesRead.toFloat() / progressState.totalPlanchesInApp.coerceAtLeast(1),
-                            height = 8.dp,
-                            barColor = MinimalPrimary,
-                            trackColor = MinimalOnPrimaryContainer.copy(alpha = 0.12f)
+                            height = 10.dp,
+                            barColor = Moutarde,
+                            trackColor = Blanc.copy(alpha = 0.25f)
                         )
 
                         Spacer(modifier = Modifier.height(16.dp))
@@ -600,21 +600,21 @@ fun ProgressMetricItem(
         Icon(
             imageVector = icon,
             contentDescription = null,
-            tint = MinimalPrimary,
+            tint = Blanc,
             modifier = Modifier.size(20.dp)
         )
         Spacer(modifier = Modifier.height(4.dp))
         Text(
             text = value,
             style = MaterialTheme.typography.labelLarge.copy(
-                color = MinimalOnPrimaryContainer,
+                color = Blanc,
                 fontWeight = FontWeight.Bold
             )
         )
         Text(
             text = label,
             style = MaterialTheme.typography.labelSmall.copy(
-                color = MinimalOnPrimaryContainer.copy(alpha = 0.75f),
+                color = Blanc.copy(alpha = 0.8f),
                 fontSize = 10.sp
             )
         )
