@@ -93,9 +93,9 @@ fun MainAppContainer(
                                     )
                                 },
                                 colors = NavigationBarItemDefaults.colors(
-                                    selectedIconColor = MinimalOnPrimaryContainer,
-                                    selectedTextColor = MinimalOnPrimaryContainer,
-                                    indicatorColor = MinimalSecondaryContainer,
+                                    selectedIconColor = Grenat,
+                                    selectedTextColor = Grenat,
+                                    indicatorColor = GrenatDoux,
                                     unselectedIconColor = MinimalTextSecondary,
                                     unselectedTextColor = MinimalTextSecondary
                                 ),

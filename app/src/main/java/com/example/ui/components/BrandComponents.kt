@@ -48,13 +48,13 @@ fun BrandLogo(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Image(
-            painter = painterResource(id = R.drawable.img_app_icon_1787289570260),
+            painter = painterResource(id = R.drawable.ic_sekolin_emblem),
             contentDescription = "Logo Sekolin'ny Fiainana",
             modifier = Modifier
                 .size(64.dp)
                 .clip(RoundedCornerShape(12.dp))
                 .border(1.dp, BordureLegere, RoundedCornerShape(12.dp)),
-            contentScale = ContentScale.Crop
+            contentScale = ContentScale.Fit
         )
 
         Spacer(modifier = Modifier.height(8.dp))

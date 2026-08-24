@@ -61,13 +61,13 @@ fun HomeScreen(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Image(
-                            painter = painterResource(id = R.drawable.img_app_icon_1787289570260),
+                            painter = painterResource(id = R.drawable.ic_sekolin_emblem),
                             contentDescription = "Logo",
                             modifier = Modifier
                                 .size(36.dp)
                                 .clip(RoundedCornerShape(10.dp))
                                 .border(1.dp, MinimalOutline, RoundedCornerShape(10.dp)),
-                            contentScale = ContentScale.Crop
+                            contentScale = ContentScale.Fit
                         )
                         Spacer(modifier = Modifier.width(10.dp))
                         Column {
@@ -161,13 +161,13 @@ fun HomeScreen(
                             }
 
                             Image(
-                                painter = painterResource(id = R.drawable.img_app_icon_1787289570260),
+                                painter = painterResource(id = R.drawable.ic_sekolin_emblem),
                                 contentDescription = "Logo",
                                 modifier = Modifier
                                     .size(54.dp)
                                     .clip(RoundedCornerShape(12.dp))
                                     .border(1.dp, Moutarde.copy(alpha = 0.5f), RoundedCornerShape(12.dp)),
-                                contentScale = ContentScale.Crop
+                                contentScale = ContentScale.Fit
                             )
                         }
 
