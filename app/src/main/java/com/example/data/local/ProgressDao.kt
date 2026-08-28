@@ -19,6 +19,9 @@ interface ProgressDao {
     @Query("SELECT * FROM planche_progress WHERE plancheId = :plancheId")
     fun getPlancheProgress(plancheId: String): Flow<PlancheProgressEntity?>
 
+    @Query("SELECT * FROM planche_progress WHERE plancheId = :plancheId")
+    suspend fun getPlancheProgressDirect(plancheId: String): PlancheProgressEntity?
+
     @Query("SELECT * FROM planche_progress WHERE isBookmarked = 1")
     fun getBookmarks(): Flow<List<PlancheProgressEntity>>
 

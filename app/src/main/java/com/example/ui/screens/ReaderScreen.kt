@@ -1,5 +1,6 @@
 package com.example.ui.screens
 
+import android.widget.Toast
 import androidx.compose.animation.*
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -19,6 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -70,6 +72,8 @@ fun ReaderScreen(
     val isRead = readerState.readPlanchesIds.contains(currentPlanche.id)
     val isBookmarked = readerState.bookmarkedIds.contains(currentPlanche.id)
 
+    val context = LocalContext.current
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -78,19 +82,37 @@ fun ReaderScreen(
                         modifier = Modifier
                             .clip(RoundedCornerShape(8.dp))
                             .clickable { showSommaireSignetsSheet = true }
-                            .padding(vertical = 4.dp, horizontal = 4.dp)
+                            .padding(vertical = 4.dp, horizontal = 2.dp)
                     ) {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Surface(
+                                color = Grenat,
+                                shape = RoundedCornerShape(4.dp)
+                            ) {
+                                Text(
+                                    text = "C${currentCahier.number}",
+                                    style = MaterialTheme.typography.labelSmall.copy(
+                                        color = Blanc,
+                                        fontWeight = FontWeight.Bold,
+                                        fontSize = 11.sp
+                                    ),
+                                    modifier = Modifier.padding(horizontal = 5.dp, vertical = 2.dp)
+                                )
+                            }
+                            Spacer(modifier = Modifier.width(6.dp))
                             Text(
-                                text = "Cahier ${currentCahier.number} · ${currentCahier.title}",
+                                text = currentCahier.title,
                                 style = MaterialTheme.typography.titleSmall.copy(
                                     fontWeight = FontWeight.Bold,
                                     color = MinimalTextPrimary
                                 ),
                                 maxLines = 1,
-                                overflow = TextOverflow.Ellipsis
+                                overflow = TextOverflow.Ellipsis,
+                                modifier = Modifier.weight(1f, fill = false)
                             )
-                            Spacer(modifier = Modifier.width(4.dp))
+                            Spacer(modifier = Modifier.width(2.dp))
                             Icon(
                                 imageVector = Icons.Default.ArrowDropDown,
                                 contentDescription = "Ouvrir le sommaire",
@@ -99,8 +121,11 @@ fun ReaderScreen(
                             )
                         }
                         Text(
-                            text = "Planche ${readerState.currentPlancheIndex + 1} / ${planches.size} · Toucher pour le sommaire",
-                            style = MaterialTheme.typography.labelSmall.copy(color = MinimalTextSecondary)
+                            text = "Planche ${readerState.currentPlancheIndex + 1}/${planches.size} · ${currentCahier.theme}",
+                            style = MaterialTheme.typography.labelSmall.copy(
+                                color = MinimalTextSecondary,
+                                fontSize = 11.sp
+                            )
                         )
                     }
                 },
@@ -161,7 +186,12 @@ fun ReaderScreen(
                         )
                     }
                     IconButton(
-                        onClick = { onToggleBookmark(currentPlanche.id, currentCahier.id) },
+                        onClick = {
+                            val willBookmark = !isBookmarked
+                            onToggleBookmark(currentPlanche.id, currentCahier.id)
+                            val msg = if (willBookmark) "Planche ajoutée aux signets" else "Planche retirée des signets"
+                            Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+                        },
                         modifier = Modifier.testTag("reader_bookmark_button")
                     ) {
                         Icon(
@@ -256,6 +286,139 @@ fun ReaderScreen(
             verticalArrangement = Arrangement.spacedBy(16.dp),
             contentPadding = PaddingValues(top = 12.dp, bottom = 24.dp)
         ) {
+            // Cahier Context Header on each page
+            item {
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(16.dp))
+                        .clickable { showSommaireSignetsSheet = true }
+                        .testTag("reader_cahier_header_card"),
+                    shape = RoundedCornerShape(16.dp),
+                    colors = CardDefaults.cardColors(
+                        containerColor = MinimalSurface
+                    ),
+                    border = BorderStroke(1.dp, MinimalOutline.copy(alpha = 0.6f))
+                ) {
+                    Column(
+                        modifier = Modifier.padding(16.dp)
+                    ) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                modifier = Modifier.weight(1f)
+                            ) {
+                                Surface(
+                                    color = Grenat,
+                                    shape = RoundedCornerShape(6.dp)
+                                ) {
+                                    Text(
+                                        text = "CAHIER ${currentCahier.number}",
+                                        style = MaterialTheme.typography.labelSmall.copy(
+                                            color = Blanc,
+                                            fontWeight = FontWeight.Bold,
+                                            fontSize = 11.sp,
+                                            letterSpacing = 0.5.sp
+                                        ),
+                                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp)
+                                    )
+                                }
+                                Spacer(modifier = Modifier.width(8.dp))
+                                Text(
+                                    text = currentCahier.theme,
+                                    style = MaterialTheme.typography.labelSmall.copy(
+                                        color = OliveProfond,
+                                        fontWeight = FontWeight.SemiBold
+                                    ),
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis
+                                )
+                            }
+
+                            Surface(
+                                color = Grenat.copy(alpha = 0.08f),
+                                shape = RoundedCornerShape(20.dp),
+                                border = BorderStroke(1.dp, Grenat.copy(alpha = 0.2f))
+                            ) {
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp)
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Default.MenuBook,
+                                        contentDescription = "Sommaire",
+                                        tint = Grenat,
+                                        modifier = Modifier.size(14.dp)
+                                    )
+                                    Spacer(modifier = Modifier.width(4.dp))
+                                    Text(
+                                        text = "Sommaire",
+                                        style = MaterialTheme.typography.labelSmall.copy(
+                                            color = Grenat,
+                                            fontWeight = FontWeight.Bold,
+                                            fontSize = 11.sp
+                                        )
+                                    )
+                                }
+                            }
+                        }
+
+                        Spacer(modifier = Modifier.height(10.dp))
+
+                        Text(
+                            text = currentCahier.title,
+                            style = MaterialTheme.typography.titleMedium.copy(
+                                fontWeight = FontWeight.Bold,
+                                color = MinimalTextPrimary,
+                                fontSize = 16.sp,
+                                lineHeight = 22.sp
+                            )
+                        )
+
+                        Spacer(modifier = Modifier.height(10.dp))
+
+                        // Progress bar within current cahier
+                        val currentProgress = (readerState.currentPlancheIndex + 1).toFloat() / planches.size.toFloat()
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Text(
+                                text = "Planche ${readerState.currentPlancheIndex + 1} sur ${planches.size}",
+                                style = MaterialTheme.typography.labelSmall.copy(
+                                    color = MinimalTextSecondary,
+                                    fontWeight = FontWeight.Medium
+                                )
+                            )
+                            Text(
+                                text = "${(currentProgress * 100).toInt()}% du cahier",
+                                style = MaterialTheme.typography.labelSmall.copy(
+                                    color = Grenat,
+                                    fontWeight = FontWeight.SemiBold
+                                )
+                            )
+                        }
+
+                        Spacer(modifier = Modifier.height(6.dp))
+
+                        LinearProgressIndicator(
+                            progress = { currentProgress },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(5.dp)
+                                .clip(RoundedCornerShape(3.dp)),
+                            color = Grenat,
+                            trackColor = MinimalOutline.copy(alpha = 0.3f)
+                        )
+                    }
+                }
+            }
+
             // Planche Meta Section Badge
             item {
                 Row(
@@ -788,14 +951,14 @@ fun ReaderScreen(
                         Column(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(vertical = 32.dp),
+                                .padding(vertical = 36.dp),
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
                             Box(
                                 modifier = Modifier
-                                    .size(54.dp)
+                                    .size(56.dp)
                                     .clip(CircleShape)
-                                    .background(MinimalSecondaryContainer),
+                                    .background(Grenat.copy(alpha = 0.08f)),
                                 contentAlignment = Alignment.Center
                             ) {
                                 Icon(
@@ -807,20 +970,20 @@ fun ReaderScreen(
                             }
                             Spacer(modifier = Modifier.height(12.dp))
                             Text(
-                                text = "Aucun signet épinglé",
+                                text = "Aucun signet enregistré",
                                 style = MaterialTheme.typography.titleSmall.copy(
                                     fontWeight = FontWeight.Bold,
                                     color = MinimalTextPrimary
                                 )
                             )
-                            Spacer(modifier = Modifier.height(4.dp))
+                            Spacer(modifier = Modifier.height(6.dp))
                             Text(
-                                text = "Touche l'icône de signet 🔖 en haut à droite d'une planche pour l'épingler et la retrouver ici.",
+                                text = "Appuyez sur l'icône de signet en haut à droite d'une planche pour l'enregistrer et la retrouver ici.",
                                 style = MaterialTheme.typography.bodySmall.copy(
                                     color = MinimalTextSecondary,
                                     textAlign = TextAlign.Center
                                 ),
-                                modifier = Modifier.padding(horizontal = 24.dp)
+                                modifier = Modifier.padding(horizontal = 32.dp)
                             )
                         }
                     } else {
@@ -834,6 +997,7 @@ fun ReaderScreen(
                                 val cahier = BookData.cahiers.find { it.id == planche.cahierId } ?: BookData.cahiers.first()
                                 val plancheIdx = BookData.getPlancheIndexInCahier(planche)
                                 val isCurrent = planche.id == currentPlanche.id
+                                val isPlancheRead = readerState.readPlanchesIds.contains(planche.id)
 
                                 Card(
                                     modifier = Modifier
@@ -845,11 +1009,11 @@ fun ReaderScreen(
                                         .testTag("bookmark_item_${planche.id}"),
                                     shape = RoundedCornerShape(12.dp),
                                     colors = CardDefaults.cardColors(
-                                        containerColor = if (isCurrent) Grenat.copy(alpha = 0.08f) else MinimalSurfaceContainer
+                                        containerColor = if (isCurrent) Grenat.copy(alpha = 0.06f) else MinimalSurface
                                     ),
                                     border = BorderStroke(
                                         1.dp,
-                                        if (isCurrent) Grenat else MinimalOutline
+                                        if (isCurrent) Grenat else MinimalOutline.copy(alpha = 0.6f)
                                     )
                                 ) {
                                     Row(
@@ -860,16 +1024,17 @@ fun ReaderScreen(
                                     ) {
                                         Box(
                                             modifier = Modifier
-                                                .size(34.dp)
-                                                .clip(CircleShape)
-                                                .background(if (isCurrent) Grenat else MinimalSecondaryContainer),
+                                                .size(36.dp)
+                                                .clip(RoundedCornerShape(8.dp))
+                                                .background(if (isCurrent) Grenat else Grenat.copy(alpha = 0.1f)),
                                             contentAlignment = Alignment.Center
                                         ) {
                                             Text(
-                                                text = cahier.number,
+                                                text = "C${cahier.number}",
                                                 style = MaterialTheme.typography.labelSmall.copy(
-                                                    color = if (isCurrent) Blanc else MinimalOnPrimaryContainer,
-                                                    fontWeight = FontWeight.Bold
+                                                    color = if (isCurrent) Blanc else Grenat,
+                                                    fontWeight = FontWeight.Bold,
+                                                    fontSize = 11.sp
                                                 )
                                             )
                                         }
@@ -877,28 +1042,43 @@ fun ReaderScreen(
                                         Spacer(modifier = Modifier.width(10.dp))
 
                                         Column(modifier = Modifier.weight(1f)) {
-                                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                            Row(
+                                                verticalAlignment = Alignment.CenterVertically,
+                                                horizontalArrangement = Arrangement.spacedBy(6.dp)
+                                            ) {
                                                 Text(
-                                                    text = "Cahier ${cahier.number} · ${cahier.title}",
+                                                    text = "Cahier ${cahier.number} · ${cahier.theme}",
                                                     style = MaterialTheme.typography.labelSmall.copy(
-                                                        color = Grenat,
+                                                        color = OliveProfond,
                                                         fontWeight = FontWeight.SemiBold
-                                                    )
+                                                    ),
+                                                    maxLines = 1,
+                                                    overflow = TextOverflow.Ellipsis,
+                                                    modifier = Modifier.weight(1f, fill = false)
                                                 )
                                                 if (isCurrent) {
-                                                    Spacer(modifier = Modifier.width(6.dp))
                                                     BadgePill(
                                                         text = "En cours",
                                                         backgroundColor = Grenat,
                                                         textColor = Blanc
                                                     )
                                                 }
+                                                if (isPlancheRead) {
+                                                    BadgePill(
+                                                        text = "Lue",
+                                                        backgroundColor = VertDoux,
+                                                        textColor = VertSucces
+                                                    )
+                                                }
                                             }
+
+                                            Spacer(modifier = Modifier.height(2.dp))
+
                                             Text(
                                                 text = planche.title,
                                                 style = MaterialTheme.typography.bodyMedium.copy(
                                                     fontWeight = FontWeight.Bold,
-                                                    color = MinimalTextPrimary
+                                                    color = if (isCurrent) Grenat else MinimalTextPrimary
                                                 ),
                                                 maxLines = 1,
                                                 overflow = TextOverflow.Ellipsis
@@ -918,9 +1098,9 @@ fun ReaderScreen(
                                         ) {
                                             Icon(
                                                 imageVector = Icons.Default.Bookmark,
-                                                contentDescription = "Détacher des favoris",
+                                                contentDescription = "Retirer des signets",
                                                 tint = Grenat,
-                                                modifier = Modifier.size(20.dp)
+                                                modifier = Modifier.size(22.dp)
                                             )
                                         }
                                     }

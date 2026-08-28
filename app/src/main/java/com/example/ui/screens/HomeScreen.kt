@@ -544,7 +544,7 @@ fun HomeScreen(
                                     )
                                 )
                                 Text(
-                                    text = "En lisant une planche, touchez l'icône de signet 🔖 pour l'épingler et y revenir en un clic.",
+                                    text = "En lisant une planche, touchez l'icône de signet pour l'épingler et y revenir en un clic.",
                                     style = MaterialTheme.typography.bodySmall.copy(
                                         color = MinimalTextSecondary,
                                         lineHeight = 16.sp

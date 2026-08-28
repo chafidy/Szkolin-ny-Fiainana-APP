@@ -31,33 +31,41 @@ class ProgressRepository(private val progressDao: ProgressDao) {
 
     suspend fun togglePlancheRead(plancheId: String, cahierId: Int, currentStatus: Boolean) {
         val now = if (!currentStatus) System.currentTimeMillis() else 0L
-        progressDao.savePlancheProgress(
-            PlancheProgressEntity(
-                plancheId = plancheId,
-                cahierId = cahierId,
-                isRead = !currentStatus,
-                readTimestamp = now
-            )
+        val existing = progressDao.getPlancheProgressDirect(plancheId)
+        val entity = existing?.copy(
+            isRead = !currentStatus,
+            readTimestamp = now
+        ) ?: PlancheProgressEntity(
+            plancheId = plancheId,
+            cahierId = cahierId,
+            isRead = !currentStatus,
+            readTimestamp = now
         )
+        progressDao.savePlancheProgress(entity)
     }
 
     suspend fun toggleBookmark(plancheId: String, cahierId: Int, isBookmarked: Boolean) {
-        val existing = PlancheProgressEntity(
+        val existing = progressDao.getPlancheProgressDirect(plancheId)
+        val entity = existing?.copy(
+            isBookmarked = isBookmarked
+        ) ?: PlancheProgressEntity(
             plancheId = plancheId,
             cahierId = cahierId,
             isBookmarked = isBookmarked
         )
-        progressDao.setPlancheBookmarked(plancheId, isBookmarked)
+        progressDao.savePlancheProgress(entity)
     }
 
     suspend fun saveNote(plancheId: String, cahierId: Int, note: String) {
-        progressDao.savePlancheProgress(
-            PlancheProgressEntity(
-                plancheId = plancheId,
-                cahierId = cahierId,
-                userNote = note
-            )
+        val existing = progressDao.getPlancheProgressDirect(plancheId)
+        val entity = existing?.copy(
+            userNote = note
+        ) ?: PlancheProgressEntity(
+            plancheId = plancheId,
+            cahierId = cahierId,
+            userNote = note
         )
+        progressDao.savePlancheProgress(entity)
     }
 
     suspend fun toggleHabitDay(dayIndex: Int, currentChecked: Boolean, note: String = "") {
